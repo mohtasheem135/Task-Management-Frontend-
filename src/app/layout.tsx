@@ -4,11 +4,13 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/Sidebar/app-sidebar";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./redux/store";
+import { useEffect, useState } from "react";
+import { detectDevice } from "@/utils/detectDevice";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,6 +33,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const [device, setDevice] = useState<string>('unknown');
+
+  useEffect(() => {
+    const userAgent = navigator.userAgent;
+    const detectedDevice = detectDevice(userAgent); // Call the utility function
+    setDevice(detectedDevice ?? 'unknown');
+  }, []);
+
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -51,7 +63,9 @@ export default function RootLayout({
                 {/* <Navbar /> */}
 
                 <main className="">
-                  {/* <SidebarTrigger /> */}
+                  {device === "mobile" && 
+                  <SidebarTrigger />
+                }
                   {children}
                 </main>
                 {/* <Footer /> */}

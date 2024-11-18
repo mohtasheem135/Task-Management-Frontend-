@@ -25,6 +25,8 @@ import { Button } from "@/components/ui/button";
 import { useEvents } from "@/api/hooks/Event/useEvents";
 import { useDispatch } from "react-redux";
 import { setEvents } from "../redux/slices/EventSlice";
+import { useEffect, useState } from "react";
+import { detectDevice } from "@/utils/detectDevice";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -85,8 +87,16 @@ const Page = () => {
     }
   };
 
+  const [device, setDevice] = useState("unknown");
+
+  useEffect(() => {
+    const userAgent = navigator.userAgent;
+    const detectedDevice = detectDevice(userAgent); // Call the utility function
+    setDevice(detectedDevice);
+  }, []);
+
   return (
-    <div className="w-full px-[50px]">
+    <div className="w-full px-[50px] pb-[50px]">
       <div className=" flex justify-end items-center">
         <Dialog>
           <DialogTrigger asChild>
@@ -103,7 +113,7 @@ const Page = () => {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="grid grid-cols-3 gap-20 pt-[10px]">
+      <div className={`${!detectDevice ==="mobile" ? "grid grid-cols-3 gap-20 pt-[10px]" : "grid grid-cols-1 gap-10 pt-[20px]"}`}>
         {currentEvent?.subtasks.map((tasks, index) => (
           <Card key={index} className="w-auto">
             <CardHeader>

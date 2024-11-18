@@ -176,7 +176,7 @@ export function AppSidebar() {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <Sidebar collapsible="offcanvas" variant="inset">
+    <Sidebar collapsible="offcanvas" variant="inset" side="right">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -211,9 +211,9 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroupLabel>List of Events</SidebarGroupLabel>
-        <SidebarMenu>
+        <SidebarMenu className="px-2">
           {events.map((eventData) => (
-            <SidebarMenuItem key={eventData.id}>
+            <SidebarMenuItem className="mb-1" key={eventData.id}>
               <SidebarMenuButton
                 onClick={() => handleClick(eventData)}
                 key={eventData?.id}

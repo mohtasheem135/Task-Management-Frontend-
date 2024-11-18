@@ -1,14 +1,22 @@
 "use client";
 
-import { useEvents } from "@/api/hooks/Event/useEvents";
-
+// import { useEvents } from "@/api/hooks/Event/useEvents";
+import { detectDevice } from '@/utils/detectDevice';
+import { useEffect, useState } from "react";
 
 function HomeSection() {
-  const { isLoading, error} = useEvents();
-  
+  // const { isLoading, error} = useEvents();
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const [device, setDevice] = useState("unknown");
+
+  useEffect(() => {
+    const userAgent = navigator.userAgent;
+    const detectedDevice = detectDevice(userAgent); // Call the utility function
+    setDevice(detectedDevice);
+  }, []);
+
+  // if (isLoading) return <p>Loading...</p>;
+  // if (error) return <p>Error: {error}</p>;
 
   // return (
   //   <div className="px-[100px]">
@@ -112,11 +120,7 @@ function HomeSection() {
   //     </div>
   //   </div>
   // );
-  return(
-    <div className="w-full">
-      Home
-    </div>
-  )
+  return <div className="w-full mt-11">Task Management {device}</div>;
 }
 
 export default HomeSection;
