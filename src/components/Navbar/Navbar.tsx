@@ -1,5 +1,4 @@
 import React from 'react'
-import { ModeToggle } from '../Sidebar/ModeToggle'
 
 const Navbar = () => {
   return (
