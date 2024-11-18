@@ -2,8 +2,6 @@
 import { useSelector } from "react-redux";
 import {
   Card,
-  CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -26,17 +24,10 @@ import { Button } from "@/components/ui/button";
 import { useEvents } from "@/api/hooks/Event/useEvents";
 import { useDispatch } from "react-redux";
 import { setEvents } from "../redux/slices/EventSlice";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { useIsMobile } from "@/hooks/use-mobile";
-import useWindowSize from "@/hooks/useWindowSize";
 import CountdownTimer from "@/components/page components/Task/CountdownTimer";
 
 const Page = () => {
-  const { width, height } = useWindowSize();
   const dispatch = useDispatch();
   const currentEvent = useSelector((state) => state.event)?.events;
   const { events, getEvents } = useEvents();
@@ -122,7 +113,7 @@ const Page = () => {
         }`}
       >
         {currentEvent?.subtasks.map((tasks, index) => (
-          <Dialog>
+          <Dialog key={tasks.id}>
             <DialogTrigger asChild>
               <Card key={index} className="w-full py-3 flex">
                 <CardHeader className="w-[55%] px-2 py-0">
