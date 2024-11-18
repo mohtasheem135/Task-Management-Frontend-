@@ -194,37 +194,13 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {/* <SidebarGroup>
-          <SidebarGroupLabel className="shadow-lg px-3 py-6">
-            Add Event
-          </SidebarGroupLabel>
-          <SidebarGroupAction
-            className="w-9 h-9 border-dashed border-2 border-black"
-            title="Add Event"
-          >
-            <Dialog>
-              <DialogTrigger asChild>
-                <Plus className="cursor-pointer " />
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Add Event</DialogTitle>
-                  <DialogDescription>Add a new Event here.</DialogDescription>
-                </DialogHeader>
-                <EventForm onSave={handleEventCreation} />
-              </DialogContent>
-            </Dialog>
-          </SidebarGroupAction>
-          <SidebarGroupContent />
-        </SidebarGroup> */}
-
         <SidebarMenu className="px-2 py-2 shadow-xl rounded-lg">
           <SidebarMenuItem className="flex items-center">
             <SidebarMenuButton>Add Event</SidebarMenuButton>
             <div className="mr-2 border-2 border-dashed border-black px-[3px] py-[3px] rounded-lg">
               <Dialog>
                 <DialogTrigger asChild>
-                  <span >
+                  <span>
                     <Plus className="cursor-pointer" size={22} />
                   </span>
                 </DialogTrigger>
@@ -254,7 +230,11 @@ export function AppSidebar() {
               <SidebarMenuButton
                 onClick={() => handleClick(eventData)}
                 key={eventData?.id}
-                className={``}
+                className={`${
+                  eventData.isActive
+                    ? "bg-green-300 hover:bg-green-300"
+                    : "bg-red-300 hover:bg-red-300"
+                }`}
               >
                 {eventData?.eventName}
                 <SidebarMenuBadge className="mr-[35px]">
