@@ -120,7 +120,7 @@ function HomeSection() {
   //     </div>
   //   </div>
   // );
-  return <div className="w-full mt-11">Task Management {device}</div>;
+  return <div className="w-full mt-11 ml-5">Task Management {device}</div>;
 }
 
 export default HomeSection;

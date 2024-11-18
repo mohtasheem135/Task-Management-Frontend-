@@ -1,8 +1,4 @@
-import {
-  FilePenLine,
-  HomeIcon,
-  Plus,
-} from "lucide-react";
+import { FilePenLine, HomeIcon, Plus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -35,10 +31,11 @@ import EventForm from "../Forms/EventForm";
 import { useAddEvent } from "@/api/hooks/Event/useAddEvent";
 import { useUpdateEvent } from "@/api/hooks/Event/useUpdateEvent";
 import Link from "next/link";
-
+import { useEffect, useState } from "react";
+import { detectDevice } from "@/utils/detectDevice";
+import { ModeToggle } from "./ModeToggle";
 
 export function AppSidebar() {
-
   // const {
   //   state,
   //   open,
@@ -172,31 +169,46 @@ export function AppSidebar() {
   //   </Sidebar>
   // );
 
-  if (isLoading) return <p>Loading...</p>;
+  const [device, setDevice] = useState("unknown");
+
+  useEffect(() => {
+    const userAgent = navigator.userAgent;
+    const detectedDevice = detectDevice(userAgent); // Call the utility function
+    setDevice(detectedDevice);
+  }, []);
+
+  if (isLoading && !device) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <Sidebar collapsible="offcanvas" variant="inset" side="right">
+    <Sidebar
+      collapsible="offcanvas"
+      variant="inset"
+      side={`${device === "mobile" ? "left" : "left"}`}
+    >
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem>
+          <SidebarMenuItem className="flex justify-between items-center">
             <Link href="/">
               <HomeIcon />
             </Link>
+            <ModeToggle />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel className="shadow-lg px-3 py-6">Add Event</SidebarGroupLabel>
-          <SidebarGroupAction className="w-9 h-9 border-dashed border-2 border-black" title="Add Event">
+        {/* <SidebarGroup>
+          <SidebarGroupLabel className="shadow-lg px-3 py-6">
+            Add Event
+          </SidebarGroupLabel>
+          <SidebarGroupAction
+            className="w-9 h-9 border-dashed border-2 border-black"
+            title="Add Event"
+          >
             <Dialog>
               <DialogTrigger asChild>
-                {/* <NotebookPen className="cursor-pointer" /> */}
-                  <Plus className="cursor-pointer " />
-                {/* <Button className="w-3 h-8 " variant={"outline"}>
-                </Button> */}
+                <Plus className="cursor-pointer " />
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -208,23 +220,46 @@ export function AppSidebar() {
             </Dialog>
           </SidebarGroupAction>
           <SidebarGroupContent />
-        </SidebarGroup>
+        </SidebarGroup> */}
+
+        <SidebarMenu className="px-2 py-2 shadow-xl rounded-lg">
+          <SidebarMenuItem className="flex items-center">
+            <SidebarMenuButton>Add Event</SidebarMenuButton>
+            <div className="mr-2 border-2 border-dashed border-black px-[3px] py-[3px] rounded-lg">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <span >
+                    <Plus className="cursor-pointer" size={22} />
+                  </span>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px] w-full max-w-full z-50 p-4 sm:rounded-lg">
+                  <DialogHeader>
+                    <DialogTitle>Add Event</DialogTitle>
+                    <DialogDescription>Add a new Event here.</DialogDescription>
+                  </DialogHeader>
+                  <EventForm onSave={handleEventCreation} />
+                </DialogContent>
+              </Dialog>
+            </div>
+          </SidebarMenuItem>
+        </SidebarMenu>
 
         <SidebarGroupLabel>List of Events</SidebarGroupLabel>
         <SidebarMenu className="px-2">
           {events.map((eventData) => (
-            <SidebarMenuItem className="mb-1" key={eventData.id}>
+            <SidebarMenuItem
+              className={`${
+                eventData.isActive
+                  ? "bg-green-300 hover:bg-green-300"
+                  : "bg-red-300 hover:bg-red-300"
+              } px-2 py-4 rounded-lg mb-1 flex items-center`}
+              key={eventData.id}
+            >
               <SidebarMenuButton
                 onClick={() => handleClick(eventData)}
                 key={eventData?.id}
-                className={`${
-                  eventData.isActive
-                    ? "bg-green-300 hover:bg-green-300"
-                    : "bg-red-300 hover:bg-red-300"
-                } px-3 py-6`}
+                className={``}
               >
-                {/* <NotebookPen className="cursor-pointer" /> */}
-
                 {eventData?.eventName}
                 <SidebarMenuBadge className="mr-[35px]">
                   <Button className="rounded-full px-2 py-2 h-0 w-0 text-[10px]">
@@ -232,11 +267,12 @@ export function AppSidebar() {
                   </Button>
                 </SidebarMenuBadge>
               </SidebarMenuButton>
-              <SidebarMenuAction className="w-9 h-9" title="Edit Event">
+              {/* <SidebarMenuAction className="w-9 h-9" title="Edit Event"> */}
+              <div>
                 <Dialog>
                   <DialogTrigger className=" rounded-full" asChild>
                     <span>
-                      <FilePenLine className="cursor-pointer" size={18} />
+                      <FilePenLine className="cursor-pointer" size={22} />
                     </span>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
@@ -252,7 +288,8 @@ export function AppSidebar() {
                     />
                   </DialogContent>
                 </Dialog>
-              </SidebarMenuAction>
+              </div>
+              {/* </SidebarMenuAction> */}
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
