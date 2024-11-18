@@ -113,7 +113,7 @@ const Page = () => {
           </DialogContent>
         </Dialog>
       </div>
-      <div className={`${!detectDevice ==="mobile" ? "grid grid-cols-3 gap-20 pt-[10px]" : "grid grid-cols-1 gap-10 pt-[20px]"}`}>
+      <div className={`${!device ==="mobile" ? "grid grid-cols-3 gap-20 pt-[10px]" : "grid grid-cols-1 gap-10 pt-[20px]"}`}>
         {currentEvent?.subtasks.map((tasks, index) => (
           <Card key={index} className="w-auto">
             <CardHeader>
