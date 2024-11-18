@@ -1,112 +1,11 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { useEvents } from "@/api/hooks/Event/useEvents";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { setEvents } from "@/app/redux/slices/EventSlice";
-import {
-  getDateAndTime,
-  replaceSpacesWithUnderscores,
-} from "@/utils/basicUtilities";
-import EventForm from "@/components/Forms/EventForm";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { NotebookPen } from "lucide-react";
-import { useAddEvent } from "@/api/hooks/Event/useAddEvent";
-import { useUpdateEvent } from "@/api/hooks/Event/useUpdateEvent";
-import TaskForm from "@/components/Forms/TaskForm";
-import { useAddTask } from "@/api/hooks/Task/useAddTask";
+
 
 function HomeSection() {
-  const { events, isLoading, error, getEvents } = useEvents();
-  const {
-    addEvent,
-    isSubmitting: isEventAdding,
-    error: addEventError,
-  } = useAddEvent();
-  const {
-    updateExistingEvent,
-    isSubmitting: isUpdating,
-    error: updateError,
-  } = useUpdateEvent();
-  const {
-    addTask,
-    isSubmitting: isAddingTask,
-    error: addTaskError,
-  } = useAddTask();
-
-  const dispatch = useDispatch();
-  const router = useRouter();
-
-  const handleClick = (eventData) => {
-    dispatch(setEvents(eventData));
-    const eventName = replaceSpacesWithUnderscores(eventData?.eventName);
-    router.push(`${eventName}`);
-  };
-
-  const handleEventUpdate = async (eventData) => {
-    const data = {
-      eventName: eventData.eventName,
-      isActive: eventData.isActive,
-      description: eventData.description,
-    };
-    try {
-      await updateExistingEvent(eventData.eventId, data);
-      getEvents();
-      alert("Event Updated successfully!");
-    } catch (err) {
-      console.error("Submission error:", err);
-    }
-  };
-
-  const handleEventCreation = async (eventData) => {
-    const data = {
-      eventName: eventData.eventName,
-      isActive: eventData.isActive,
-      description: eventData.description,
-    };
-    try {
-      await addEvent(data);
-      getEvents();
-      alert("Event added successfully!");
-    } catch (err) {
-      console.error("Submission error:", err);
-    }
-  };
-
-  const handleTaskCreation = async (task) => {
-    const data = {
-      subtaskName: task.subtaskName,
-      description: task.description,
-      taskStatus: task.taskStatus,
-      priority: task.priority,
-      expectedCompletionTime: task.expectedCompletionTime,
-    };
-    try {
-      await addTask(task.eventId, data);
-      getEvents();
-      alert("Task added successfully!");
-    } catch (err) {
-      console.error("Submission error:", err);
-    }
-  };
+  const { isLoading, error} = useEvents();
+  
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;

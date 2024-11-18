@@ -3,9 +3,8 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "@/components/Navbar/Navbar";
-import Footer from "@/components/Footer/Footer";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/Sidebar/app-sidebar";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";

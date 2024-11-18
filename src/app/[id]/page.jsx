@@ -14,7 +14,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -27,7 +26,7 @@ import { useEvents } from "@/api/hooks/Event/useEvents";
 import { useDispatch } from "react-redux";
 import { setEvents } from "../redux/slices/EventSlice";
 
-const page = () => {
+const Page = () => {
   const dispatch = useDispatch();
   const currentEvent = useSelector((state) => state.event)?.events;
   const { events, getEvents } = useEvents();
@@ -42,14 +41,14 @@ const page = () => {
   // Update Task
   const {
     updateExistingTask,
-    isSubmitting: isUpdatingTask,
-    error: updateError,
+    // isSubmitting: isUpdatingTask,
+    // error: updateError,
   } = useUpdateTask();
   // Add Task
   const {
     addTask,
-    isSubmitting: isAddingTask,
-    error: addTaskError,
+    // isSubmitting: isAddingTask,
+    // error: addTaskError,
   } = useAddTask();
 
   const handleUpdateTask = async (task) => {
@@ -162,4 +161,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

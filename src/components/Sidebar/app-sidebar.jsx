@@ -1,21 +1,12 @@
 import {
-  Calendar,
-  ChevronDown,
   FilePenLine,
-  Home,
   HomeIcon,
-  Inbox,
-  MoreHorizontal,
-  NotebookPen,
   Plus,
-  Search,
-  Settings,
 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -33,70 +24,30 @@ import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  useSidebar,
 } from "@/components/ui/sidebar";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { useEvents } from "@/api/hooks/Event/useEvents";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { setEvents } from "@/app/redux/slices/EventSlice";
 import { replaceSpacesWithUnderscores } from "@/utils/basicUtilities";
 import EventForm from "../Forms/EventForm";
 import { useAddEvent } from "@/api/hooks/Event/useAddEvent";
 import { useUpdateEvent } from "@/api/hooks/Event/useUpdateEvent";
+import Link from "next/link";
 
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-];
 
 export function AppSidebar() {
-  const {
-    state,
-    open,
-    setOpen,
-    openMobile,
-    setOpenMobile,
-    isMobile,
-    toggleSidebar,
-  } = useSidebar();
+
+  // const {
+  //   state,
+  //   open,
+  //   setOpen,
+  //   openMobile,
+  //   setOpenMobile,
+  //   isMobile,
+  //   toggleSidebar,
+  // } = useSidebar();
 
   const { events, isLoading, error, getEvents } = useEvents();
   const dispatch = useDispatch();
@@ -105,15 +56,15 @@ export function AppSidebar() {
   // Add Event
   const {
     addEvent,
-    isSubmitting: isEventAdding,
-    error: addEventError,
+    // isSubmitting: isEventAdding,
+    // error: addEventError,
   } = useAddEvent();
 
   // Update Event
   const {
     updateExistingEvent,
-    isSubmitting: isUpdating,
-    error: updateError,
+    // isSubmitting: isUpdating,
+    // error: updateError,
   } = useUpdateEvent();
 
   const handleClick = (eventData) => {
@@ -221,14 +172,17 @@ export function AppSidebar() {
   //   </Sidebar>
   // );
 
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <Sidebar collapsible="offcanvas" variant="inset">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <a href="/">
+            <Link href="/">
               <HomeIcon />
-            </a>
+            </Link>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -259,7 +213,7 @@ export function AppSidebar() {
         <SidebarGroupLabel>List of Events</SidebarGroupLabel>
         <SidebarMenu>
           {events.map((eventData) => (
-            <SidebarMenuItem>
+            <SidebarMenuItem key={eventData.id}>
               <SidebarMenuButton
                 onClick={() => handleClick(eventData)}
                 key={eventData?.id}
