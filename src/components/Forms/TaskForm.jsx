@@ -1,27 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const TaskForm = ({ taskData, onSave }) => {
   const [formData, setFormData] = useState({
-    eventId: '',
-    subtaskName: '',
-    description: '',
-    taskStatus: 'NOT_COMPLETED',
-    priority: 'MEDIUM',
-    expectedCompletionTime: '',
+    eventId: "",
+    subtaskName: "",
+    description: "",
+    taskStatus: "PENDING",
+    priority: "MEDIUM",
+    expectedCompletionTime: "",
   });
 
   useEffect(() => {
     if (taskData) {
       setFormData({
-        eventId: taskData.id || taskData || '',
-        subtaskName: taskData.subtaskName || '',
-        description: taskData.description || '',
-        taskStatus: taskData.taskStatus || 'NOT_COMPLETED',
-        priority: taskData.priority || 'MEDIUM',
-        expectedCompletionTime: taskData.expectedCompletionTime || '',
+        eventId: taskData.id || taskData || "",
+        subtaskName: taskData.name || "",
+        description: taskData.description || "",
+        taskStatus: taskData.status || "PENDING",
+        priority: taskData.priority || "MEDIUM",
+        expectedCompletionTime: taskData.expectedCompletionTime || "",
       });
     }
   }, [taskData]);
+
+  const [minDateTime, setMinDateTime] = useState("");
+
+  useEffect(() => {
+    const now = new Date();
+    const formattedNow = now.toISOString().slice(0, 16);
+    setMinDateTime(formattedNow);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,14 +41,19 @@ const TaskForm = ({ taskData, onSave }) => {
 
   const handleSave = (e) => {
     e.preventDefault();
-    onSave(formData); 
+    onSave(formData);
   };
 
   return (
     <form onSubmit={handleSave} className="space-y-4">
       {/* Task Name Input */}
       <div>
-        <label htmlFor="subtaskName" className="block text-sm font-medium text-gray-700">Task Name</label>
+        <label
+          htmlFor="subtaskName"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Task Name
+        </label>
         <input
           id="subtaskName"
           name="subtaskName"
@@ -54,7 +67,12 @@ const TaskForm = ({ taskData, onSave }) => {
 
       {/* Description Textbox */}
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Description
+        </label>
         <textarea
           id="description"
           name="description"
@@ -68,7 +86,12 @@ const TaskForm = ({ taskData, onSave }) => {
 
       {/* Status Selection */}
       <div>
-        <label htmlFor="taskStatus" className="block text-sm font-medium text-gray-700">Status</label>
+        <label
+          htmlFor="taskStatus"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Status
+        </label>
         <select
           id="taskStatus"
           name="taskStatus"
@@ -85,7 +108,12 @@ const TaskForm = ({ taskData, onSave }) => {
 
       {/* Priority Selection */}
       <div>
-        <label htmlFor="priority" className="block text-sm font-medium text-gray-700">Priority</label>
+        <label
+          htmlFor="priority"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Priority
+        </label>
         <select
           id="priority"
           name="priority"
@@ -102,11 +130,17 @@ const TaskForm = ({ taskData, onSave }) => {
 
       {/* Completion Date and Time */}
       <div>
-        <label htmlFor="expectedCompletionTime" className="block text-sm font-medium text-gray-700">Expected Completion Date & Time</label>
+        <label
+          htmlFor="expectedCompletionTime"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Expected Completion Date & Time
+        </label>
         <input
           id="expectedCompletionTime"
           name="expectedCompletionTime"
           type="datetime-local"
+          min={minDateTime}
           value={formData.expectedCompletionTime}
           onChange={handleInputChange}
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm outline-none"
@@ -120,7 +154,7 @@ const TaskForm = ({ taskData, onSave }) => {
           type="submit"
           className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
         >
-          {taskData ? 'Update Task' : 'Create Task'}
+          {taskData ? "Update Task" : "Create Task"}
         </button>
       </div>
     </form>

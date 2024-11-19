@@ -14,7 +14,7 @@ const EventForm = ({ eventData, onSave }) => {
     if (eventData) {
       setFormData({
         eventId: eventData.id || '',
-        eventName: eventData.eventName || '',
+        eventName: eventData.name || '',
         isActive: eventData.isActive || false,
         description: eventData.description || '',
       });

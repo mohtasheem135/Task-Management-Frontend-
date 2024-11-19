@@ -1,11 +1,6 @@
 "use client";
 import { useSelector } from "react-redux";
-import {
-  Card,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDateAndTime } from "@/utils/basicUtilities";
 import { NotebookPen } from "lucide-react";
 import {
@@ -55,9 +50,9 @@ const Page = () => {
 
   const handleUpdateTask = async (task) => {
     const data = {
-      subtaskName: task.subtaskName,
+      name: task.subtaskName,
       description: task.description,
-      taskStatus: task.taskStatus,
+      status: task.taskStatus,
       priority: task.priority,
       expectedCompletionTime: task.expectedCompletionTime,
     };
@@ -70,11 +65,31 @@ const Page = () => {
     }
   };
 
+  
+  // async function handleUpdateTask_time(task, status) {
+  //   const data = {
+  //     name: task.subtaskName,
+  //     description: task.description,
+  //     status: status,
+  //     priority: task.priority,
+  //     expectedCompletionTime: task.expectedCompletionTime,
+  //   };
+  //   console.log(`Task ${task.id} updated to ${data}`, data);
+
+  //   try {
+  //     await updateExistingTask(task.eventId, data);
+  //     getEvents();
+  //     alert("Task Updated to Not Completed!");
+  //   } catch (err) {
+  //     console.error("Submission error:", err);
+  //   }
+  // }
+
   const handleTaskCreation = async (task) => {
     const data = {
-      subtaskName: task.subtaskName,
+      name: task.subtaskName,
       description: task.description,
-      taskStatus: task.taskStatus,
+      status: task.taskStatus,
       priority: task.priority,
       expectedCompletionTime: task.expectedCompletionTime,
     };
@@ -84,6 +99,33 @@ const Page = () => {
       alert("Task added successfully!");
     } catch (err) {
       console.error("Submission error:", err);
+    }
+  };
+
+  function determineTaskStatus(task) {
+    const { status, expectedCompletionTime } = task;
+    const now = new Date();
+    const dueTime = new Date(expectedCompletionTime); // Convert expectedCompletionTime to a Date object
+
+    if (status === "COMPLETED") {
+      return "Completed";
+    } else if (now > dueTime) {
+      return "Not Completed";
+    } else {
+      return "Pending";
+    }
+  }
+
+  const getCardColor = (status) => {
+    switch (status) {
+      case "Completed":
+        return "bg-green-300";
+      case "Pending":
+        return "bg-yellow-300";
+      case "Not Completed":
+        return "bg-red-300";
+      default:
+        return "bg-gray-200";
     }
   };
 
@@ -112,26 +154,21 @@ const Page = () => {
             : "grid grid-cols-1 gap-5 pt-[20px] "
         }`}
       >
-        {currentEvent?.subtasks.map((tasks, index) => (
+        {currentEvent?.tasks.map((tasks, index) => (
           <Dialog key={tasks.id}>
             <DialogTrigger asChild>
-              <Card key={index} className="w-full py-3 flex">
+              <Card
+                key={index}
+                className={`w-full py-3 flex ${getCardColor(
+                  determineTaskStatus(tasks)
+                )}`}
+              >
                 <CardHeader className="w-[55%] px-2 py-0">
                   <CardTitle border-2 border-black>
                     <div className="flex justify-between items-center py-3 w-full">
-                      {tasks?.subtaskName}
+                      {tasks?.name}
                     </div>
                   </CardTitle>
-                  {/* <CardDescription className="">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button className="z-50" variant="outline">
-                          View Details
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-80"></PopoverContent>
-                    </Popover>
-                  </CardDescription> */}
                 </CardHeader>
                 <CardFooter className="w-[45%] flex flex-col justify-center items-center p-0">
                   <div className="mt-2">
@@ -140,28 +177,6 @@ const Page = () => {
                     />
                   </div>
                 </CardFooter>
-                {/* <CardContent> */}
-                {/* <h1>
-                Status:{" "}
-                {tasks?.taskStatus === "PENDING"
-                  ? "Pending"
-                  : tasks?.taskStatus === "NOT_COMPLETED"
-                  ? "Not Completed"
-                  : "Completed"}
-              </h1>
-              {tasks?.createdAt && (
-                <h1>
-                  Created At: {getDateAndTime(tasks?.createdAt).date} - (
-                  {getDateAndTime(tasks?.createdAt).time})
-                </h1>
-              )}
-              {tasks?.updatedAt && (
-                <h1>
-                  Updated At: {getDateAndTime(tasks?.updatedAt).date} - (
-                  {getDateAndTime(tasks?.updatedAt).time})
-                </h1>
-              )} */}
-                {/* </CardContent> */}
               </Card>
             </DialogTrigger>
             <DialogContent>
@@ -206,7 +221,7 @@ const Page = () => {
               <div className="flex justify-between items-center">
                 <Button className="w-[150px]">Yes</Button>
                 <DialogClose className="">
-                  <Button className="w-[150px]">Not Yet</Button>
+                  <Button className="w-[150px] bg-[#fc0303]">Not Yet</Button>
                 </DialogClose>
               </div>
             </DialogContent>

@@ -62,13 +62,13 @@ export function AppSidebar() {
 
   const handleClick = (eventData) => {
     dispatch(setEvents(eventData));
-    const eventName = replaceSpacesWithUnderscores(eventData?.eventName);
+    const eventName = replaceSpacesWithUnderscores(eventData?.name);
     router.push(`${eventName}`);
   };
 
   const handleEventCreation = async (eventData) => {
     const data = {
-      eventName: eventData.eventName,
+      name: eventData.eventName,
       isActive: eventData.isActive,
       description: eventData.description,
     };
@@ -83,7 +83,7 @@ export function AppSidebar() {
 
   const handleEventUpdate = async (eventData) => {
     const data = {
-      eventName: eventData.eventName,
+      name: eventData.eventName,
       isActive: eventData.isActive,
       description: eventData.description,
     };
@@ -95,75 +95,6 @@ export function AppSidebar() {
       console.error("Submission error:", err);
     }
   };
-
-  // return (
-  //   <Sidebar collapsible="offcanvas" variant="floating">
-  //     {/* <SidebarHeader>
-  //       <SidebarMenu>
-  //         <SidebarMenuItem> ME</SidebarMenuItem>
-  //       </SidebarMenu>
-  //     </SidebarHeader> */}
-
-  //     <SidebarContent>
-  //       <SidebarGroup>
-  //         <SidebarGroupLabel>Add Event</SidebarGroupLabel>
-  //         <SidebarGroupAction title="Add Event">
-  //           <Plus /> <span className="sr-only">Add Project</span>
-  //         </SidebarGroupAction>
-  //         <SidebarGroupContent />
-  //       </SidebarGroup>
-
-  //       {/* <SidebarGroup> */}
-  //       <SidebarGroupLabel>All the Events</SidebarGroupLabel>
-  //       {events.map((eventData) => (
-  //         <Collapsible key={eventData.id} className="group/collapsible">
-  //           <CollapsibleTrigger asChild>
-  //             <SidebarMenuButton>
-  //               <NotebookPen className="cursor-pointer" />
-  //               {eventData?.eventName}
-  //               <SidebarMenuBadge className="mr-[35px]">
-  //                 <Button className="rounded-full px-2 py-2 h-0 w-0 text-[10px]">
-  //                   {eventData?.subtasks.length}
-  //                 </Button>
-  //               </SidebarMenuBadge>
-  //               <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-  //             </SidebarMenuButton>
-  //           </CollapsibleTrigger>
-
-  //           <CollapsibleContent>
-  //             <SidebarMenuSub>
-  //               {eventData?.subtasks.map((item) => (
-  //                 <SidebarMenuSubItem key={item.id}>
-  //                   <SidebarMenuButton
-  //                     className={`${
-  //                       item?.taskStatus === "PENDING"
-  //                         ? "bg-gray-300 hover:bg-gray-300"
-  //                         : item?.taskStatus === "COMPLETED"
-  //                         ? "bg-green-300 hover:bg-green-300"
-  //                         : "bg-red-300 hover:bg-red-300"
-  //                     } `}
-  //                   >
-  //                     {/* <a> */}
-  //                       <span onClick={()=> handleClick(eventData)}>{item?.subtaskName}</span>
-  //                     {/* </a> */}
-  //                     <SidebarMenuBadge className="mr-[15px]">
-  //                       <Button className=" px-7 py-2 h-0 w-0 text-[10px]">
-  //                         {item?.priority}
-  //                       </Button>
-  //                     </SidebarMenuBadge>
-  //                   </SidebarMenuButton>
-  //                 </SidebarMenuSubItem>
-  //               ))}
-  //             </SidebarMenuSub>
-  //           </CollapsibleContent>
-  //         </Collapsible>
-  //       ))}
-
-  //       {/* Good Till Here */}
-
-  //     </SidebarContent>
-  //   </Sidebar>
-  // );
 
   const [device, setDevice] = useState("unknown");
 
@@ -236,10 +167,10 @@ export function AppSidebar() {
                     : "bg-red-300 hover:bg-red-300"
                 }`}
               >
-                {eventData?.eventName}
+                {eventData?.name}
                 <SidebarMenuBadge className="mr-[35px]">
                   <Button className="rounded-full px-2 py-2 h-0 w-0 text-[10px]">
-                    {eventData?.subtasks.length}
+                    {eventData?.tasks.length}
                   </Button>
                 </SidebarMenuBadge>
               </SidebarMenuButton>

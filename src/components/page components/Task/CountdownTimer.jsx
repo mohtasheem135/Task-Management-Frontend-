@@ -31,7 +31,7 @@ const CountdownTimer = ({expectedCompletionTime}) => {
   }, [targetDate]);
 
   return (
-    <div className="countdown-timer border-2 border-dashed border-black rounded-md px-1 py-1">
+    <div className="countdown-timer border-2 border-dashed border-black rounded-md w-[135px] flex justify-center px-1 py-1">
       <p>
         {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
       </p>
