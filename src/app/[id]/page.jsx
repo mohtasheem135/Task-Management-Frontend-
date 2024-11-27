@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import TaskForm from "@/components/Forms/TaskForm";
 import { useUpdateTask } from "@/api/hooks/Task/useUpdateTask";
+import { useBatchUpdateTask } from "@/api/hooks/Task/useBatchUpdateTask";
 import { useAddTask } from "@/api/hooks/Task/useAddTask";
 import { Button } from "@/components/ui/button";
 import { useEvents } from "@/api/hooks/Event/useEvents";
@@ -21,6 +22,7 @@ import { useDispatch } from "react-redux";
 import { setEvents } from "../redux/slices/EventSlice";
 import { useIsMobile } from "@/hooks/use-mobile";
 import CountdownTimer from "@/components/page components/Task/CountdownTimer";
+import { useEffect, useState } from "react";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -36,17 +38,13 @@ const Page = () => {
   }
 
   // Update Task
-  const {
-    updateExistingTask,
-    // isSubmitting: isUpdatingTask,
-    // error: updateError,
-  } = useUpdateTask();
+  const { updateExistingTask } = useUpdateTask();
+
+  // Batch Update Task
+  const { batchUpdateExistingTasks } = useBatchUpdateTask();
+
   // Add Task
-  const {
-    addTask,
-    // isSubmitting: isAddingTask,
-    // error: addTaskError,
-  } = useAddTask();
+  const { addTask } = useAddTask();
 
   const handleUpdateTask = async (task) => {
     const data = {
@@ -64,26 +62,70 @@ const Page = () => {
       console.error("Submission error:", err);
     }
   };
+  const updateTaskToCompleted = async (tasks) => {
+    const data = {
+      name: tasks.name,
+      description: tasks.description,
+      status: "COMPLETED",
+      priority: tasks.priority,
+      expectedCompletionTime: tasks.expectedCompletionTime,
+    };
+    try {
+      await updateExistingTask(tasks.id, data);
+      getEvents();
+      alert("Successfully Completed the Task!");
+    } catch (err) {
+      console.error("Submission error:", err);
+    }
+  };
 
-  
-  // async function handleUpdateTask_time(task, status) {
-  //   const data = {
-  //     name: task.subtaskName,
-  //     description: task.description,
-  //     status: status,
-  //     priority: task.priority,
-  //     expectedCompletionTime: task.expectedCompletionTime,
-  //   };
-  //   console.log(`Task ${task.id} updated to ${data}`, data);
+  // Functionality to filter out all the overdue task and mark it Not Completed at the same time ************
+  const getOverdueTasks = (tasks) => {
+    const overdueTasks = tasks.filter((task) => {
+      const now = new Date();
+      const dueTime = new Date(task.expectedCompletionTime);
+      return now > dueTime && task.status === "PENDING";
+    });
 
-  //   try {
-  //     await updateExistingTask(task.eventId, data);
-  //     getEvents();
-  //     alert("Task Updated to Not Completed!");
-  //   } catch (err) {
-  //     console.error("Submission error:", err);
-  //   }
-  // }
+    const formattedOverdueTasks = {
+      tasks: overdueTasks.map((task) => ({
+        id: task.id,
+        name: task.subtaskName || task.name,
+        description: task.description,
+        expectedCompletionTime: task.expectedCompletionTime,
+        priority: task.priority,
+        status: "NOT_COMPLETED",
+      })),
+    };
+
+    return formattedOverdueTasks;
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [overdueTasks, setOverdueTasks] = useState({ tasks: [] });
+
+  useEffect(() => {
+    if (currentEvent && currentEvent.tasks) {
+      const updateOverdueTasks = async () => {
+        const overdue = getOverdueTasks(currentEvent.tasks);
+
+        setOverdueTasks(overdue);
+        if (overdue.tasks.length > 0) {
+          try {
+            await batchUpdateExistingTasks(overdue);
+            getEvents();
+            alert("All Statuses Updated successfully!");
+          } catch (err) {
+            console.error("xxxxxx Submission error:", err);
+          }
+        }
+      };
+
+      updateOverdueTasks();
+    }
+  }, []);
+
+  // ****************
 
   const handleTaskCreation = async (task) => {
     const data = {
@@ -102,11 +144,11 @@ const Page = () => {
     }
   };
 
+  // Functionality to determine the Status of the task to update the background color efficiently**********
   function determineTaskStatus(task) {
     const { status, expectedCompletionTime } = task;
     const now = new Date();
-    const dueTime = new Date(expectedCompletionTime); // Convert expectedCompletionTime to a Date object
-
+    const dueTime = new Date(expectedCompletionTime);
     if (status === "COMPLETED") {
       return "Completed";
     } else if (now > dueTime) {
@@ -128,6 +170,8 @@ const Page = () => {
         return "bg-gray-200";
     }
   };
+
+  // ***********
 
   return (
     <div className="w-[100vw] sm:w-[calc(100vw-18rem)] px-[30px] pb-[50px]">
@@ -219,7 +263,12 @@ const Page = () => {
               </div>
               <h1>Have you completed this task?</h1>
               <div className="flex justify-between items-center">
-                <Button className="w-[150px]">Yes</Button>
+                <Button
+                  onClick={()=>updateTaskToCompleted(tasks)}
+                  className="w-[150px]"
+                >
+                  Yes
+                </Button>
                 <DialogClose className="">
                   <Button className="w-[150px] bg-[#fc0303]">Not Yet</Button>
                 </DialogClose>

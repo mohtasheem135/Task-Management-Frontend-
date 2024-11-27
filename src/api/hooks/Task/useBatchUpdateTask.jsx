@@ -1,17 +1,16 @@
 import { useState } from 'react';
-// import { postEvent } from '../services/eventService';
+import { batchUpdateTask } from '@/api/services/taskService';
 import { handleApiErrors } from '@/utils/handleErrors';
-import { createTask } from '@/api/services/taskService';
 
-export const useAddTask = () => {
+export const useBatchUpdateTask = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
-  const addTask = async (id, taskData) => {
+  const batchUpdateExistingTasks = async (taskData) => {
     try {
       setIsSubmitting(true);
       setError(null); // Reset previous errors
-      const response = await createTask(id, taskData);
+      const response = await batchUpdateTask(taskData);
       return response; // Return response on success
     } catch (err) {
       const errorMessage = handleApiErrors(err);
@@ -22,5 +21,5 @@ export const useAddTask = () => {
     }
   };
 
-  return { addTask, isSubmitting, error };
+  return { batchUpdateExistingTasks, isSubmitting, error };
 };

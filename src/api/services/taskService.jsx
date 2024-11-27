@@ -13,3 +13,8 @@ export const createTask = async (id, taskData) => {
     const response = await axiosInstance.put(`/tasks/${id}`, taskData);
     return response.data;
   };
+
+  export const batchUpdateTask = async (taskData) => {
+    const response = await axiosInstance.put(`/tasks/batch`, taskData);
+    return response.data;
+  };

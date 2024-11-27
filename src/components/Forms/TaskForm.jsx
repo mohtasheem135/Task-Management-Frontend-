@@ -16,7 +16,7 @@ const TaskForm = ({ taskData, onSave }) => {
         eventId: taskData.id || taskData || "",
         subtaskName: taskData.name || "",
         description: taskData.description || "",
-        taskStatus: taskData.status || "PENDING",
+        taskStatus: "PENDING",
         priority: taskData.priority || "MEDIUM",
         expectedCompletionTime: taskData.expectedCompletionTime || "",
       });
@@ -85,7 +85,7 @@ const TaskForm = ({ taskData, onSave }) => {
       </div>
 
       {/* Status Selection */}
-      <div>
+      {/* <div>
         <label
           htmlFor="taskStatus"
           className="block text-sm font-medium text-gray-700"
@@ -104,7 +104,7 @@ const TaskForm = ({ taskData, onSave }) => {
           <option value="PENDING">Pending</option>
           <option value="NOT_COMPLETED">Not Completed</option>
         </select>
-      </div>
+      </div> */}
 
       {/* Priority Selection */}
       <div>

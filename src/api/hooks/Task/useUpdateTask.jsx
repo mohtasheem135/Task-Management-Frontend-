@@ -1,4 +1,3 @@
-// src/hooks/useUpdateEvent.js
 import { useState } from 'react';
 import { updateTask } from '@/api/services/taskService';
 import { handleApiErrors } from '@/utils/handleErrors';
